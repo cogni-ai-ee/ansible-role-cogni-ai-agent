@@ -1,2 +1,7 @@
 ---
-...
+- name: Verify azure-ai-inference is installed
+  ansible.builtin.command: python3 -c "import azure.ai.inference"
+  register: azure_ai_inference_check
+  changed_when: false
+  failed_when: azure_ai_inference_check.rc != 0
+  when: ansible_os_family != 'NixOS'

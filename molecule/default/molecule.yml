@@ -21,11 +21,11 @@ platforms:
     image: i386/alpine:latest
   - name: debian-latest
     image: debian:latest
-  - name: nixos-latest
-    dockerfile: ../resources/playbooks/Dockerfile.j2
-    image: cogni-ai-agent-nixos:latest
-    base_image: nixos/nix:latest
-    pre_build_image: false
+#  - name: nixos-latest
+#    dockerfile: ../resources/playbooks/Dockerfile.j2
+#    image: cogni-ai-agent-nixos:latest
+#    base_image: nixos/nix:latest
+#    pre_build_image: false
   - name: ubuntu-jammy
     image: ubuntu:jammy
   - name: ubuntu-noble
