@@ -8,13 +8,13 @@
         if command -v python3 || command -v python; then
           exit 0
         elif command -v apk; then
-          apk add --no-cache python3 py3-pip
+          apk add -q --no-cache python3 py3-pip
         elif command -v apt; then
-          apt -y -qq update && apt install -y -qq python3-minimal
+          apt-get update -y -qq && apt-get install -y -qq python3-minimal
         elif command -v dnf; then
-          dnf install -y python3
+          dnf install -y -q python3
         elif command -v zypper; then
-          zypper --non-interactive install python3
+          zypper -q --non-interactive install python3
         else
           echo "No supported package manager found" >&2
           exit 1
