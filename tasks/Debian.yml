@@ -1,6 +1,6 @@
 ---
-- name: Apt cleanup ({{ ansible_os_family }})
-  become: "{{ (ansible_user_id is defined and ansible_user_id != 'root') or (lookup('env', 'UID') | int != 0) }}"
+- name: Apt cleanup ({{ ansible_facts['os_family'] }})
+  become: "{{ (ansible_facts['user_id'] | default('root') != 'root') or (lookup('env', 'UID') | int != 0) }}"
   block:
     - name: Removes dependencies that are no longer required
       ansible.builtin.apt:

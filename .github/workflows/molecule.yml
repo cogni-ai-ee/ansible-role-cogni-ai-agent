@@ -28,7 +28,7 @@ jobs:
         scenario:
           - default
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           path: ${{ github.repository }}
       - uses: gofrolist/molecule-action@v2
