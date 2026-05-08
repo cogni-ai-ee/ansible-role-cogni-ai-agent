@@ -4,3 +4,28 @@
   vars_files:
     - ../../defaults/main.yml
   tasks:
+    - name: Test ai_inference_chat in check mode
+      ai_inference_chat:
+        prompt: "Hello"
+      check_mode: true
+      register: result_check
+
+    - name: Verify check mode result
+      ansible.builtin.assert:
+        that:
+          - "result_check.skipped"
+          - 'result_check.msg == "Check mode: no request sent"'
+
+    - name: Test ai_inference_chat with dummy token (should fail)
+      ai_inference_chat:
+        token: "dummy_token"
+        prompt: "Hello"
+      register: result_fail
+      ignore_errors: true
+
+    - name: Verify failure with dummy token
+      ansible.builtin.assert:
+        that:
+          - "result_fail.failed"
+          - "'Authentication' in result_fail.msg or 'Unauthorized' in result_fail.msg or '401' in result_fail.msg or 'Invalid' in result_fail.msg"
+      when: result_fail.failed

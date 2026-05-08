@@ -44,6 +44,8 @@ provisioner:
   env:
     ANSIBLE_FORCE_COLOR: '1'
     ANSIBLE_LOAD_CALLBACK_PLUGINS: '1'
+    ANSIBLE_LIBRARY: ../../library
+    ANSIBLE_MODULE_UTILS: ../../module_utils
   inventory:
     group_vars:
       all:
