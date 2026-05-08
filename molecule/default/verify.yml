@@ -4,28 +4,48 @@
   vars_files:
     - ../../defaults/main.yml
   tasks:
-    - name: Test ai_inference_chat in check mode
+    - name: Test ai_inference_chat in check mode with complex messages
       ai_inference_chat:
-        prompt: "Hello"
+        system_prompt: "You are a helpful assistant"
+        messages:
+          - role: user
+            content: "What is the capital of France?"
+          - role: assistant
+            content: "The capital of France is Paris."
+        prompt: "And Germany?"
       check_mode: true
       register: result_check
 
-    - name: Verify check mode result
+    - name: Verify check mode result structure and order
       ansible.builtin.assert:
         that:
-          - "result_check.skipped"
+          - "result_check.messages | length == 4"
+          - "result_check.messages[0].role == 'system'"
+          - "result_check.messages[0].content == 'You are a helpful assistant'"
+          - "result_check.messages[1].content == 'What is the capital of France?'"
+          - "result_check.messages[2].role == 'assistant'"
+          - "result_check.messages[3].role == 'user'"
+          - "result_check.messages[3].content == 'And Germany?'"
           - 'result_check.msg == "Check mode: no request sent"'
 
-    - name: Test ai_inference_chat with dummy token (should fail)
+    - name: Test ai_inference_chat with dummy token (should fail predictably)
       ai_inference_chat:
         token: "dummy_token"
         prompt: "Hello"
       register: result_fail
-      failed_when: false  # Avoid confusing "fatal" logs for an expected failure
+      # We expect a failure, but we want the task to report success ONLY if it failed for the right reason.
+      # If it unexpectedly succeeds, or fails with a totally different error (like a traceback), this will fail the build.
+      failed_when: >
+        not result_fail.failed or
+        result_fail.msg is not defined or
+        ('Unauthorized' not in result_fail.msg and
+         'Authentication' not in result_fail.msg and
+         '401' not in result_fail.msg and
+         'Invalid' not in result_fail.msg and
+         'connection' not in (result_fail.msg | lower) and
+         'timeout' not in (result_fail.msg | lower))
 
-    - name: Verify failure with dummy token
+    - name: Verify failure details
       ansible.builtin.assert:
         that:
           - "result_fail.msg is defined"
-          - "'Authentication' in result_fail.msg or 'Unauthorized' in result_fail.msg or '401' in result_fail.msg or 'Invalid' in result_fail.msg or 'connection' in result_fail.msg.lower() or 'timeout' in result_fail.msg.lower()"
-

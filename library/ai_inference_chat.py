@@ -29,8 +29,21 @@ def main():
         supports_check_mode=True,
     )
 
+    messages_dict = []
+    if module.params["system_prompt"]:
+        messages_dict.append({"role": "system", "content": module.params["system_prompt"]})
+    for m in module.params["messages"] or []:
+        messages_dict.append(m)
+    if module.params["prompt"]:
+        messages_dict.append({"role": "user", "content": module.params["prompt"]})
+
     if module.check_mode:
-        module.exit_json(changed=False, skipped=True, msg="Check mode: no request sent")
+        module.exit_json(
+            changed=False,
+            msg="Check mode: no request sent",
+            model=module.params["model"],
+            messages=messages_dict,
+        )
 
     token = module.params["token"] or os.getenv("GITHUB_TOKEN")
     if not token:
@@ -38,14 +51,15 @@ def main():
 
     try:
         client = create_client(module.params["endpoint"], token)
-        messages = build_messages(
+        # Use common utility to build SDK message objects
+        sdk_messages = build_messages(
             raw_messages=module.params["messages"],
             system_prompt=module.params["system_prompt"],
             prompt=module.params["prompt"],
         )
 
         kwargs = {
-            "messages": messages,
+            "messages": sdk_messages,
             "model": module.params["model"],
         }
 
@@ -61,7 +75,7 @@ def main():
             changed=False,
             message=response.choices[0].message.content,
             model=module.params["model"],
-            messages_count=len(messages),
+            messages=messages_dict,
         )
     except Exception as exc:
         module.fail_json(msg=str(exc))

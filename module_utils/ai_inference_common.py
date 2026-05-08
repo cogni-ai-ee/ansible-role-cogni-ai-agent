@@ -23,9 +23,6 @@ def build_messages(raw_messages=None, system_prompt=None, prompt=None):
     if system_prompt:
         messages.append(SystemMessage(system_prompt))
 
-    if prompt:
-        messages.append(UserMessage(prompt))
-
     for item in raw_messages or []:
         role = item.get("role")
         content = item.get("content")
@@ -38,5 +35,8 @@ def build_messages(raw_messages=None, system_prompt=None, prompt=None):
             messages.append(AssistantMessage(content))
         else:
             raise ValueError("Unsupported role: %s" % role)
+
+    if prompt:
+        messages.append(UserMessage(prompt))
 
     return messages
