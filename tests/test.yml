@@ -3,4 +3,4 @@
   hosts: localhost
   remote_user: root
   roles:
-    - cogni-ai.cogni-ai-agent
+    - cogni_ai.cogni_ai_agent

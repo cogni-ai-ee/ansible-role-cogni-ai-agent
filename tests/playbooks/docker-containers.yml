@@ -108,16 +108,16 @@
       cogni-ai-agent-on-ubuntu-latest: ubuntu:latest
       cogni-ai-agent-on-ubuntu-noble: ubuntu:noble
     container_image: "{{ container_image_map[inventory_hostname] | default('ubuntu:latest') }}"
-- name: Install cogni-ai.cogni-ai-agent role on all containers
+- name: Install cogni_ai.cogni_ai_agent role on all containers
   hosts: docker_containers
   gather_facts: true
   tags: always
   vars:
     controller_python: '{{ ansible_playbook_python }}'
   tasks:
-    - name: Installs cogni-ai.cogni-ai-agent role
-      ansible.builtin.import_role:
-        name: cogni-ai.cogni-ai-agent
+    - name: Installs cogni_ai.cogni_ai_agent role
+      ansible.builtin.include_role:
+        name: cogni_ai.cogni_ai_agent
   post_tasks:
     - name: Stop Docker containers
       community.docker.docker_container:
