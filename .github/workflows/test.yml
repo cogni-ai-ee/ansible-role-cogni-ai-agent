@@ -23,8 +23,12 @@ jobs:
         with:
           path: ${{ github.repository }}
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
+          cache: pip
+          cache-dependency-path: |
+            .devcontainer/requirements.txt
+            Pipfile*
           python-version: '3.12'
       - name: Install Python's requirements
         run: pip install -r .devcontainer/requirements.txt

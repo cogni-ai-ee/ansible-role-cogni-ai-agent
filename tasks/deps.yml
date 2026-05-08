@@ -1,0 +1,25 @@
+---
+- name: Install Python packages (Alpine)
+  ansible.builtin.package:
+    name:
+      - py3-pip
+      - py3-packaging
+      - py3-setuptools
+    state: present
+  when: ansible_distribution == 'Alpine'
+
+- name: Install Python packages (Debian/Ubuntu)
+  ansible.builtin.package:
+    name:
+      - python3-pip
+      - python3-packaging
+      - python3-setuptools
+    state: present
+  when: ansible_os_family == 'Debian'
+
+- name: Install azure-ai-inference pip package
+  ansible.builtin.pip:
+    name: azure-ai-inference
+    state: present
+    break_system_packages: true
+  when: ansible_distribution != 'NixOS'

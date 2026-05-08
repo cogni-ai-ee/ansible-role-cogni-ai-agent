@@ -28,7 +28,6 @@ This role requires:
 - One of the following operating systems:
   - Alpine Linux
   - Debian/Ubuntu
-  - NixOS or systems with Nix package manager
 
 ## Install
 

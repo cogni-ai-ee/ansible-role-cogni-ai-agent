@@ -23,8 +23,8 @@ all:
           ansible_connection: docker
           ansible_host: cogni-ai-agent-on-alpine-latest
           ansible_python_interpreter: /usr/bin/python3
-        cogni-ai-agent-on-nixos-latest:
-          ansible_connection: docker
-          ansible_distribution: NixOS
-          ansible_host: cogni-ai-agent-on-nixos-latest
-          ansible_python_interpreter: /root/.nix-profile/bin/python3
+#        cogni-ai-agent-on-nixos-latest:
+#          ansible_connection: docker
+#          ansible_distribution: NixOS
+#          ansible_host: cogni-ai-agent-on-nixos-latest
+#          ansible_python_interpreter: /root/.nix-profile/bin/python3
