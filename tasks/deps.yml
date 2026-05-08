@@ -1,13 +1,19 @@
 ---
-- name: Install Python pip (Alpine)
+- name: Install Python packages (Alpine)
   ansible.builtin.package:
-    name: py3-pip
+    name:
+      - py3-pip
+      - py3-packaging
+      - py3-setuptools
     state: present
   when: ansible_distribution == 'Alpine'
 
-- name: Install Python pip (Debian/Ubuntu)
+- name: Install Python packages (Debian/Ubuntu)
   ansible.builtin.package:
-    name: python3-pip
+    name:
+      - python3-pip
+      - python3-packaging
+      - python3-setuptools
     state: present
   when: ansible_os_family == 'Debian'
 
