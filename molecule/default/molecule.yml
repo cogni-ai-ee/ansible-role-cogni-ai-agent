@@ -46,6 +46,7 @@ provisioner:
     ANSIBLE_LIBRARY: "../../library"
     ANSIBLE_LOAD_CALLBACK_PLUGINS: "1"
     ANSIBLE_MODULE_UTILS: "../../module_utils"
+    GITHUB_TOKEN: "${GITHUB_TOKEN}"
   inventory:
     group_vars:
       all:

@@ -28,24 +28,14 @@
           - "result_check.messages[3].content == 'And Germany?'"
           - 'result_check.msg == "Check mode: no request sent"'
 
-    - name: Test ai_inference_chat with dummy token (should fail predictably)
+    - name: Test ai_inference_chat with actual call (expects GITHUB_TOKEN)
       ai_inference_chat:
-        token: "dummy_token"
-        prompt: "Hello"
-      register: result_fail
-      # We expect a failure, but we want the task to report success ONLY if it failed for the right reason.
-      # If it unexpectedly succeeds, or fails with a totally different error (like a traceback), this will fail the build.
-      failed_when: >
-        not result_fail.failed or
-        result_fail.msg is not defined or
-        ('Unauthorized' not in result_fail.msg and
-         'Authentication' not in result_fail.msg and
-         '401' not in result_fail.msg and
-         'Invalid' not in result_fail.msg and
-         'connection' not in (result_fail.msg | lower) and
-         'timeout' not in (result_fail.msg | lower))
+        prompt: "Hello, this is an automated test. Please respond with 'OK'."
+        token: "{{ lookup('env', 'GITHUB_TOKEN') }}"
+      register: result_call
 
-    - name: Verify failure details
+    - name: Verify call response
       ansible.builtin.assert:
         that:
-          - "result_fail.msg is defined"
+          - "result_call.message is defined"
+          - "result_call.message | length > 0"
