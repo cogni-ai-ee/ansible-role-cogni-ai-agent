@@ -35,7 +35,7 @@ This is the primary tour for new contributors and provides a comprehensive walkt
 - Requirements management and dependencies
 - Contribution guidelines and workflow
 
-**When to use**: Start here if you're new to the repository or want to understand the Ansible role template structure.
+**When to use**: Start here if you're new to the repository or want to understand the Cogni AI Agent role structure.
 
 ## How to Use Code Tours
 

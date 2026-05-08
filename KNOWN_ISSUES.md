@@ -61,7 +61,7 @@ This converts the symlinks from absolute to relative paths:
 ### Affected Components
 
 - [molecule/resources/playbooks/Dockerfile.j2](molecule/resources/playbooks/Dockerfile.j2) -
-  Molecule NixOS image template
+  Molecule NixOS image configuration
 - [tests/playbooks/docker-containers.yml](tests/playbooks/docker-containers.yml) -
   Docker test playbook (uses pre-built image)
 
@@ -73,7 +73,7 @@ This converts the symlinks from absolute to relative paths:
 
 ### Status
 
-**Workaround implemented** - The Dockerfile template includes the symlink conversion fix.
+**Workaround implemented** - The Dockerfile configuration includes the symlink conversion fix.
 
 This issue affects any environment running:
 

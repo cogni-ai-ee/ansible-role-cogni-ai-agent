@@ -2,9 +2,9 @@
 
 ## Project Overview
 
-This is an Ansible role template repository. It provides standardized structure,
-GitHub Actions workflows, issue/PR templates, and coding standards for creating
-reusable Ansible roles.
+This is the Cogni AI Agent role repository for Ansible. It provides standardized structure,
+GitHub Actions workflows, issue/PR templates, and coding standards for managing
+Cogni AI Agent installations.
 
 Key contents:
 
