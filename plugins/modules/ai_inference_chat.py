@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.ai_inference_common import create_client, build_messages
+from ansible_collections.cogni_ai.cogni_ai_agent.plugins.module_utils.ai_inference_common import create_client, build_messages
 import os
 
 

@@ -1,0 +1,38 @@
+---
+namespace: cogni_ai
+name: cogni_ai_agent
+version: 0.0.1
+authors:
+  - Cogni AI
+description: Cogni AI Agent collection
+readme: README.md
+license:
+  - MIT
+tags:
+  - ai
+  - agent
+  - inference
+repository: https://github.com/Cogni-AI-OU/ansible-role-cogni-ai-agent
+documentation: https://github.com/Cogni-AI-OU/ansible-role-cogni-ai-agent
+homepage: https://github.com/Cogni-AI-OU/ansible-role-cogni-ai-agent
+issues: https://github.com/Cogni-AI-OU/ansible-role-cogni-ai-agent/issues
+build_ignore:
+  - molecule
+  - tests
+  - .github
+  - .tours
+  - .devcontainer
+  - .vscode
+  - .gitignore
+  - .pre-commit-config.yaml
+  - .markdownlint.yaml
+  - .yamllint
+  - pyproject.toml
+  - Pipfile
+  - Pipfile.lock
+  - requirements.yml
+  - requirements-local.yml.j2
+  - AGENTS.md
+  - KNOWN_ISSUES.md
+  - LICENSE
+  - README.md
