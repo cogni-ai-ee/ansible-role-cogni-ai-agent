@@ -35,7 +35,8 @@ jobs:
         env:
           ANSIBLE_FORCE_COLOR: '1'
           ANSIBLE_STDOUT_CALLBACK: ${{ runner.debug == '1' && 'debug' || 'ansible.builtin.default' }}
-          ANSIBLE_CALLBACK_RESULT_FORMAT: yaml
+          ANSIBLE_DISPLAY_SKIPPED_HOSTS: 'no'
+          ANSIBLE_DISPLAY_OK_HOSTS: ${{ runner.debug == '1' && 'yes' || 'no' }}
           MOLECULE_REPORT: molecule-${{ matrix.scenario }}-report.html
         with:
           molecule_args: >-
@@ -48,10 +49,74 @@ jobs:
         run: sudo chmod 644 molecule-${{ matrix.scenario }}-report.html
         working-directory: ${{ github.repository }}
       - if: always()
-        name: Converts test report
-        uses: patrick-werner/fhir-html-validation-to-markdown@1.0.0
-        with:
-          input_file: ${{ github.repository }}/molecule-${{ matrix.scenario }}-report.html
+        name: Generate test summary
+        run: |
+          set -eu
+          REPORT="molecule-${{ matrix.scenario }}-report.html"
+          if [ ! -f "$REPORT" ]; then
+            echo "::warning::Report file $REPORT not found."
+            exit 0
+          fi
+
+          echo "### Molecule Test Summary (${{ matrix.scenario }})" >> $GITHUB_STEP_SUMMARY
+
+          # Install pandoc if not available
+          if ! command -v pandoc &> /dev/null; then
+            sudo apt-get update && sudo apt-get install -y pandoc
+          fi
+
+          # Convert HTML to Markdown (GFM for better compatibility)
+          pandoc -f html -t gfm "$REPORT" -o report.md
+
+          # Filter the report for conciseness
+          awk '
+            BEGIN {
+              in_recap = 0
+              in_task = 0
+              task_buffer = ""
+              task_interesting = 0
+            }
+
+            # Identify tasks (assuming they start with ## after conversion in GFM)
+            /^## / {
+              if (in_recap) { in_recap = 0; }
+              else if (task_interesting) { print task_buffer "\n"; }
+
+              in_task = 1
+              task_buffer = $0
+              task_interesting = 0
+              if ($0 ~ /PLAY RECAP/) {
+                in_recap = 1
+                task_interesting = 1
+                print $0
+              }
+              next
+            }
+
+            # Handle Play Recap block
+            in_recap { print; next; }
+
+            # Filter noise within tasks
+            /Reading database/ || /Get:[0-9]/ || /Requirement already satisfied/ || /stdout: \|-/ || /stderr: \|-/ || /^[ ]*[0-9]+%/ || /^[ ]*\([0-9]+%\)/ {
+              next
+            }
+
+            # Check for interest markers
+            /failed/ || /error/ || /warning/ || /❌/ || /⚠️/ || /changed: true/ || /"failed": true/ {
+              task_interesting = 1
+            }
+
+            in_task {
+              task_buffer = task_buffer "\n" $0
+            }
+
+            END {
+              if (!in_recap && task_interesting) {
+                print task_buffer
+              }
+            }
+          ' report.md | sed 's/^## /#### /' >> $GITHUB_STEP_SUMMARY
+        working-directory: ${{ github.repository }}
       # Debug with tmate on failure when debug logging is enabled.
       - if: ${{ failure() && runner.debug == '1' }}
         uses: mxschmitt/action-tmate@v3
