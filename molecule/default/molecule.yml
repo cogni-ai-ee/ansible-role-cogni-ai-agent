@@ -43,11 +43,11 @@ provisioner:
       stdout_callback: community.general.unixy
       verbosity: 0
   env:
-    ANSIBLE_FORCE_COLOR: "1"
-    ANSIBLE_LIBRARY: "../../library"
-    ANSIBLE_LOAD_CALLBACK_PLUGINS: "1"
-    ANSIBLE_MODULE_UTILS: "../../module_utils"
-    GITHUB_TOKEN: "${GITHUB_TOKEN}"
+    ANSIBLE_FORCE_COLOR: '1'
+    ANSIBLE_LIBRARY: ../../library
+    ANSIBLE_LOAD_CALLBACK_PLUGINS: '1'
+    ANSIBLE_MODULE_UTILS: ../../module_utils
+    GITHUB_TOKEN: ${GITHUB_TOKEN}
   inventory:
     group_vars:
       all:
