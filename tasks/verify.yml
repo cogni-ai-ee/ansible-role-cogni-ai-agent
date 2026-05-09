@@ -4,4 +4,4 @@
   register: azure_ai_inference_check
   changed_when: false
   failed_when: azure_ai_inference_check.rc != 0
-  when: ansible_distribution != 'NixOS'
+  when: ansible_facts['distribution'] != 'NixOS'
