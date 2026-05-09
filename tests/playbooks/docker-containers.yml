@@ -35,6 +35,7 @@
       delegate_to: localhost
       run_once: true  # noqa: run-once[task]
       when: "'cogni-ai-agent-on-nixos-latest' in groups['docker_containers']"
+      no_log: "{{ lookup('env', 'CI') | default(false) | bool }}"
       vars:
         ansible_python_interpreter: '{{ controller_python }}'
     - name: Ensure container is started
@@ -54,6 +55,7 @@
         pull: >-
           {{ not (container_image is search('cogni-ai-agent-nixos')) }}
       delegate_to: localhost
+      no_log: "{{ lookup('env', 'CI') | default(false) | bool }}"
       vars:
         # Use system Python with requests installed for controller-side Docker modules.
         ansible_python_interpreter: '{{ controller_python }}'
@@ -92,7 +94,7 @@
           - python3-setuptools
         state: present
         update_cache: true
-      no_log: true
+      no_log: "{{ lookup('env', 'CI') | default(false) | bool }}"
       when: container_image is search("ubuntu") or container_image is search("debian")
   tags: always
   vars:
@@ -126,4 +128,5 @@
         name: '{{ inventory_hostname }}'
         state: stopped
       delegate_to: localhost
+      no_log: "{{ lookup('env', 'CI') | default(false) | bool }}"
       failed_when: false
