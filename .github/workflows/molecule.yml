@@ -42,10 +42,10 @@ jobs:
           python-version: '3.12'
       - uses: gofrolist/molecule-action@v2
         env:
-          ANSIBLE_DISPLAY_OK_HOSTS: 'no'
-          ANSIBLE_DISPLAY_SKIPPED_HOSTS: 'no'
           ANSIBLE_FORCE_COLOR: '1'
           ANSIBLE_STDOUT_CALLBACK: ${{ runner.debug == '1' && 'debug' || 'community.general.unixy' }}
+          ANSIBLE_LOAD_CALLBACK_PLUGINS: '1'
+          DEBIAN_FRONTEND: noninteractive
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           MOLECULE_REPORT: molecule-${{ matrix.scenario }}-report.html
         with:

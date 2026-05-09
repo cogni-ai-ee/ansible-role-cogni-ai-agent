@@ -17,6 +17,7 @@
           image: nixos/nix:latest
         ansible_python_interpreter: '{{ controller_python }}'
       when: "'cogni-ai-agent-on-nixos-latest' in groups['docker_containers']"
+      no_log: "{{ ansible_verbosity | default(0) < 1 }}"
     - name: Build NixOS image with Python preinstalled
       community.docker.docker_image:
         name: '{{ nixos_built_image }}'
@@ -58,7 +59,7 @@
           if container_image is search('nixos') else omit }}
         state: started
       delegate_to: localhost
-      no_log: "{{ lookup('env', 'CI') | default(false) | bool }}"
+      no_log: "{{ ansible_verbosity | default(0) < 1 }}"
       vars:
         # Use system Python with requests installed for controller-side Docker modules.
         ansible_python_interpreter: '{{ controller_python }}'
@@ -72,6 +73,7 @@
       delegate_to: localhost
       changed_when: false
       delay: 2
+      no_log: "{{ ansible_verbosity | default(0) < 1 }}"
       vars:
         # Use system Python with requests installed for controller-side Docker modules.
         ansible_python_interpreter: '{{ controller_python }}'
@@ -87,6 +89,7 @@
       when:
         - container_image is search('alpine')
         - python_exists_alpine.rc != 0
+      no_log: "{{ ansible_verbosity | default(0) < 1 }}"
     - name: Check if Python 3 exists on Ubuntu/Debian
       ansible.builtin.raw: test -e "{{ ansible_python_interpreter }}"
       register: python_exists_debian
@@ -94,11 +97,14 @@
       changed_when: false
       when: container_image is search('ubuntu') or container_image is search('debian')
     - name: Install Python 3 on Ubuntu/Debian
-      ansible.builtin.raw: apt-get update -y -qq && apt-get install -y -qq python3 python3-pip
+      ansible.builtin.raw: |
+        export DEBIAN_FRONTEND=noninteractive
+        apt-get update -y -qq && apt-get install -y -qq -o Dpkg::Use-Pty=0 python3 python3-pip
       changed_when: true
       when:
         - container_image is search('ubuntu') or container_image is search('debian')
         - python_exists_debian.rc != 0
+      no_log: "{{ ansible_verbosity | default(0) < 1 }}"
   tags: always
   vars:
     container_image_map:

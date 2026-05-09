@@ -16,6 +16,7 @@
       loop_control:
         label: '{{ item.name }}'
       when: item.dockerfile is defined
+      no_log: "{{ ansible_verbosity | default(0) < 1 }}"
     - name: Build custom images when dockerfile is provided
       community.docker.docker_image:
         name: '{{ item.image }}'
@@ -28,7 +29,7 @@
       loop_control:
         label: '{{ item.name }}'
       when: item.dockerfile is defined
-      no_log: "{{ lookup('env', 'CI') | default(false) | bool }}"
+      no_log: "{{ ansible_verbosity | default(0) < 1 }}"
     - name: Ensure test containers are running
       community.docker.docker_container:
         name: '{{ item.name }}'
@@ -45,7 +46,7 @@
       loop: '{{ molecule_yml.platforms }}'
       loop_control:
         label: '{{ item.name }}'
-      no_log: "{{ lookup('env', 'CI') | default(false) | bool }}"
+      no_log: "{{ ansible_verbosity | default(0) < 1 }}"
     - name: Build instance config entries
       ansible.builtin.set_fact:
         instance_conf_dict: >-
