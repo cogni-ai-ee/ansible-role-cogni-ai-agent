@@ -35,17 +35,19 @@ platforms:
 provisioner:
   config_options:
     defaults:
+      display_ok_hosts: false
+      display_skipped_hosts: false
       host_key_checking: false
-      # Use the built-in default callback with result_format instead of community.general.yaml
+      # Use the condensed unixy callback.
       remote_tmp: /tmp/.ansible-tmp-$${USER}
-      result_format: yaml
-      stdout_callback: ansible.builtin.default
-      verbosity: 1
+      stdout_callback: community.general.unixy
+      verbosity: 0
   env:
-    ANSIBLE_COLLECTIONS_PATH: "../../.."
-    ANSIBLE_FORCE_COLOR: "1"
-    ANSIBLE_LOAD_CALLBACK_PLUGINS: "1"
-    GITHUB_TOKEN: "${GITHUB_TOKEN}"
+    ANSIBLE_FORCE_COLOR: '1'
+    ANSIBLE_LIBRARY: ../../library
+    ANSIBLE_LOAD_CALLBACK_PLUGINS: '1'
+    ANSIBLE_MODULE_UTILS: ../../module_utils
+    GITHUB_TOKEN: ${GITHUB_TOKEN}
   inventory:
     group_vars:
       all:

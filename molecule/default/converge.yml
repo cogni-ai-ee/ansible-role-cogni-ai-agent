@@ -6,4 +6,4 @@
   tasks:
     - name: Include main role
       ansible.builtin.include_role:
-        name: cogni_ai.cogni_ai_agent.cogni_ai_agent
+        name: cogni_ai.cogni_ai_agent

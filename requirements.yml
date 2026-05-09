@@ -6,6 +6,3 @@
 collections:
   - name: community.docker
   - name: community.general  # Required for apk, from_ini and supervisorctl modules.
-  - name: https://github.com/Cogni-AI-OU/ansible-role-cogni-ai-agent.git
-    type: git
-    version: main

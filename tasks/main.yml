@@ -1,0 +1,10 @@
+---
+- name: Install dependencies
+  ansible.builtin.include_tasks: deps.yml
+  when: ansible_distribution != 'NixOS'
+- name: Verify installation
+  ansible.builtin.include_tasks:
+    apply:
+      tags: cogni-ai-agent-verify
+    file: verify.yml
+  tags: cogni-ai-agent-verify
