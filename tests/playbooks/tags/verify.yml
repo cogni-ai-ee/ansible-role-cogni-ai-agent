@@ -77,34 +77,8 @@
       vars:
         # Use system Python with requests installed for controller-side Docker modules.
         ansible_python_interpreter: '{{ controller_python }}'
-    - name: Check if Python 3 exists on Alpine
-      ansible.builtin.raw: test -e "{{ ansible_python_interpreter }}"
-      register: python_exists_alpine
-      failed_when: false
-      changed_when: false
-      when: container_image is search('alpine')
-    - name: Install Python 3 on Alpine
-      ansible.builtin.raw: apk update -q && apk add -q --no-cache python3 py3-pip
-      changed_when: true
-      when:
-        - container_image is search('alpine')
-        - python_exists_alpine.rc != 0
-      no_log: "{{ ansible_verbosity | default(0) < 1 }}"
-    - name: Check if Python 3 exists on Ubuntu/Debian
-      ansible.builtin.raw: test -e "{{ ansible_python_interpreter }}"
-      register: python_exists_debian
-      failed_when: false
-      changed_when: false
-      when: container_image is search('ubuntu') or container_image is search('debian')
-    - name: Install Python 3 on Ubuntu/Debian
-      ansible.builtin.raw: |
-        export DEBIAN_FRONTEND=noninteractive
-        apt-get update -y -qq && apt-get install -y -qq -o Dpkg::Use-Pty=0 python3 python3-pip
-      changed_when: true
-      when:
-        - container_image is search('ubuntu') or container_image is search('debian')
-        - python_exists_debian.rc != 0
-      no_log: "{{ ansible_verbosity | default(0) < 1 }}"
+    - name: Install Python 3 for Ansible
+      ansible.builtin.include_tasks: ../tasks/install-python.yml
   tags: always
   vars:
     container_image_map:

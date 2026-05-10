@@ -33,6 +33,8 @@
             prompt: Hello, this is an automated test. Please respond with 'OK'.
             token: "{{ lookup('env', 'GITHUB_TOKEN') }}"
           register: result_call
+          async: 60
+          poll: 5
         - name: Verify call response
           ansible.builtin.assert:
             that:
