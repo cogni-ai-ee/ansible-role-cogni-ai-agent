@@ -19,6 +19,8 @@ on:
       - LICENSE
       - Pipfile*
   workflow_dispatch:
+permissions:
+  contents: read
 jobs:
   test:
     name: Test
@@ -46,7 +48,7 @@ jobs:
           ANSIBLE_STDOUT_CALLBACK: ${{ runner.debug == '1' && 'debug' || 'community.general.unixy' }}
           ANSIBLE_LOAD_CALLBACK_PLUGINS: '1'
           DEBIAN_FRONTEND: noninteractive
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
           GH_MODELS_TOKEN: ${{ secrets.GH_MODELS_TOKEN }}
           MOLECULE_REPORT: molecule-${{ matrix.scenario }}-report.html
         with:
