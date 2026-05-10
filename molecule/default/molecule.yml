@@ -35,8 +35,6 @@ platforms:
 provisioner:
   config_options:
     defaults:
-      display_ok_hosts: false
-      display_skipped_hosts: false
       host_key_checking: false
       # Use the condensed unixy callback.
       remote_tmp: /tmp/.ansible-tmp-$${USER}
@@ -46,6 +44,7 @@ provisioner:
   env:
     ANSIBLE_FORCE_COLOR: '1'
     ANSIBLE_LOAD_CALLBACK_PLUGINS: '1'
+    DEBIAN_FRONTEND: noninteractive
     GITHUB_TOKEN: ${GITHUB_TOKEN}
   inventory:
     group_vars:
